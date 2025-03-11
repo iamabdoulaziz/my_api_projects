@@ -25,9 +25,8 @@ completion = client.chat.completions.create(
 print(completion)
 """
 
-def get_completion(prompt, system_prompt = ""):
-    messages = []
-    if system_prompt != "":
+def get_completion(prompt, system_prompt = "", messages = []):
+    if system_prompt != "" and len(messages) == 0:
         messages.append(
             {
                 "role": "system",
@@ -43,19 +42,18 @@ def get_completion(prompt, system_prompt = ""):
             model="openai/gpt-3.5-turbo",
             messages=messages
         )
+
         text = completion.choices[0].message.content
+        messages.append(
+            {"role": "assistant", "content": text}
+        )
         return text
     except Exception as e:
         print("OpenAi Exception: " + str(e))
     return None
 #print(completion)
-print(get_completion("Salut !"))
 
-print("Pose moi toutes tes questions, pour stoper tape juste sur enter !")
-while True:
-    prompt = input("Prompt: ")
-    print(get_completion(prompt))
-    #condition to continue or not the loop
-    if prompt == "":
-        break
-print("Bye")
+
+if __name__ == "__main__":
+    print(get_completion("Salut !"))
+
